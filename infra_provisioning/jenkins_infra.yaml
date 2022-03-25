@@ -357,9 +357,6 @@ Resources:
         - !GetAtt
           - JenkinsHostSecGroup
           - GroupId
-        - !GetAtt
-          - OriginSecurityGroup
-          - GroupId
       KeyName: !Ref 'JenkinsHostKeyName'
       ImageId: !Ref 'LatestAmiId'
       SubnetId: !Ref PrivateSubnet1
@@ -401,9 +398,6 @@ Resources:
       SecurityGroupIds:
         - !GetAtt
           - AppHostSecGroup
-          - GroupId
-        - !GetAtt
-          - OriginSecurityGroup
           - GroupId
       KeyName: !Ref 'AppHostKeyName'
       ImageId: !Ref 'LatestAmiId'
@@ -514,24 +508,6 @@ Metadata:
           - PubCidrBlocks
           - PvtCidrBlocks
           - IamUser
-      - Label:
-          default: "FileSystem Parameters"
-        Parameters:
-          - Encryption
-          - FileSystemName
-          - PerformanceMode
-          - ThroughputMode
-          - ProvisionedThroughputInMibps
-          - KmsKeyId
-      - Label:
-          default: "FileSystem Mount Target Parameters"
-        Parameters:
-          - VpcId
-          - MountTarget1Subnet
-          - MountTarget2Subnet
-          - MountTarget3Subnet
-          - FileSharePort
-          - OriginSecurityGroup
       - Label:
           default: "EC2 Instance Parameters"
         Parameters:
