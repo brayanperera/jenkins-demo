@@ -390,6 +390,7 @@ Resources:
 
           amazon-linux-extras install java-openjdk11 -y
           yum install jenkins -y
+          usermod -a -G docker jenkins
           systemctl enable jenkins
           systemctl start jenkins
 
