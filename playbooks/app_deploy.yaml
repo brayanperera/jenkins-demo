@@ -20,5 +20,5 @@
 
     - name: Run post deploy hooks
       shell: |
-        CONTAINER_ID=$(docker ps --filter="name=demo_app_demo_app" --format="{{.ID}}")
+        CONTAINER_ID=$(docker ps --filter="name=demo_app_demo_app" --format="{{ '{{' }}.ID{{ '}}' }}")
         docker exec -it $CONTAINER_ID sh -c "bash /code/hooks/post_deploy_hook.sh"
