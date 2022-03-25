@@ -6,7 +6,7 @@ pipeline {
         IMAGE_REPO_NAME="demo-app"
         IMAGE_TAG="latest"
         REPOSITORY_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
-        INVENTORY_FILE="/home/ec2-user/inventory/demo_app_inventory.ini"
+        INVENTORY_FILE="/ansible_data/inventory/demo_app_inventory.ini"
     }
 
     stages {
