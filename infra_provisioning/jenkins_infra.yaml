@@ -504,4 +504,119 @@ Metadata:
 
   License: Apache-2.0
 
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "VPC Parameters"
+        Parameters:
+          - AzList
+          - VpcCidrBlock
+          - PubCidrBlocks
+          - PvtCidrBlocks
+          - IamUser
+      - Label:
+          default: "FileSystem Parameters"
+        Parameters:
+          - Encryption
+          - FileSystemName
+          - PerformanceMode
+          - ThroughputMode
+          - ProvisionedThroughputInMibps
+          - KmsKeyId
+      - Label:
+          default: "FileSystem Mount Target Parameters"
+        Parameters:
+          - VpcId
+          - MountTarget1Subnet
+          - MountTarget2Subnet
+          - MountTarget3Subnet
+          - FileSharePort
+          - OriginSecurityGroup
+      - Label:
+          default: "EC2 Instance Parameters"
+        Parameters:
+          - BastionHostKeyName
+          - JenkinsHostKeyName
+          - AppHostKeyName
+          - BastionInstanceType
+          - JenkinsInstanceType
+          - AppInstanceType
+          - BastionSSHLocation
+          - LatestAmiId
+
+    ParameterLabels:
+      AzList:
+        default: "Availability Zone List"
+      VpcCidrBlock:
+        default: "VPC CIDR Block"
+      PubCidrBlocks:
+        default: "Public Subnet CIDR Blocks"
+      PvtCidrBlocks:
+        default: "Private Subnet CIDR Blocks"
+      IamUser:
+        default: "Allowed IAM user for ECR"
+      BastionHostKeyName:
+        default: "Bastion Host KeyName"
+      JenkinsHostKeyName:
+        default: "Jenkins Host KeyName"
+      AppHostKeyName:
+        default: "App Host KeyName"
+      BastionInstanceType:
+        default: "Bastion Host Instance Type"
+      JenkinsInstanceType:
+        default: "Jenkins Host Instance Type"
+      AppInstanceType:
+        default: "App Host Instance Type"
+      LatestAmiId:
+        default: "AMI ID"
+      BastionSSHLocation:
+        default: "Allowed IP CIDR for Bastion Host"
+
 Outputs:
+  DemoRepositoryId:
+    Description: "ECR Repository"
+    Value: !Ref DemoRepository
+    Export:
+      Name: DemoRepositoryId
+
+  VPCId:
+    Description: "VPC ID"
+    Value: !Ref JenkinsVPC
+    Export:
+      Name: VPCId
+
+  NatPublicIPAddr:
+    Description: "NAT Gateway IP"
+    Value: !Ref NatPublicIP
+    Export:
+      Name: NatPublicIPAddr
+
+  BastionIP:
+    Description: "Bastion Host IP"
+    Value: !GetAtt BastionEC2Instance.PublicIp
+    Export:
+      Name: BastionIP
+
+  JenkinsIP1:
+    Description: "Jenkins Host 1 IP"
+    Value: !GetAtt JenkinsEC2Instance1.PrivateIp
+    Export:
+      Name: JenkinsIP1
+
+  JenkinsIP1:
+    Description: "Jenkins Host 1 IP"
+    Value: !GetAtt JenkinsEC2Instance1.PrivateIp
+    Export:
+      Name: JenkinsIP1
+
+  AppIP1:
+    Description: "App Host 1 IP"
+    Value: !GetAtt AppEC2Instance1.PrivateIp
+    Export:
+      Name: AppIP1
+
+  AlbDNS:
+    Description: "ALB DNS Name"
+    Value: !GetAtt ALB.DNSName
+    Export:
+      Name: AlbDNS
