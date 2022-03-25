@@ -392,6 +392,9 @@ Resources:
           yum install jenkins -y
           systemctl enable jenkins
           systemctl start jenkins
+
+          # Install Ansible
+          amazon-linux-extras install ansible2 -y
       Tags:
         - Key: Name
           Value: jenkins-1
