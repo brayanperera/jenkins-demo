@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+    - name: Create project Home
+      file:
+        path: /home/ec2-user/apps/demo_app
+        state: directory
+        mode: '0755'
+
+    - name: Upload docker-compose.yaml
+      copy:
+        src: demo-app/docker-compose.yaml
+        dest: /home/ec2-user/apps/demo_app/docker-compose.yaml
+        mode: '0644'
+
+    - name: Invoke docker-compose up
+      command: docker-compose up
+      args:
+        chdir: /home/ec2-user/apps/demo_app/
+
+    - name: Run post deploy hooks
+      shell: |
+        CONTAINER_ID=$(docker ps --filter="name=demo_app_demo_app" --format="{{.ID}}")
+        docker exec -it $CONTAINER_ID sh -c "bash /code/hooks/post_deploy_hook.sh"

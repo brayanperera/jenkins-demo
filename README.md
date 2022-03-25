@@ -10,6 +10,24 @@ This project deploy Jenkins server on AWS
 
 ### AWS Infrastructure setup via Cloudformation
 
+### Application Deployment to App server instance
+
+Application deployment should happen via Jenkins pipeline utilizing Ansible Playbook. 
+
+Playbook steps:
+
+- Upload docker-compose.yaml to the App Host. 
+- Perform `docker-compose up` to re-create the new container
+- Perform post-deploy scripts
+  - DB migration
+
+#### Initial Manual Steps
+
+- Upload sqlite db file
+  - Path: ``
+- Upload access ssh key to Jenkins server
+
+
 ### Jenkins Init Configs
 
 #### Required Plugins
@@ -41,7 +59,7 @@ This project deploy Jenkins server on AWS
     - Jenkinsfile
 
 
-### Application Deployment to App server instance
+
 
 ## Application Usage
 

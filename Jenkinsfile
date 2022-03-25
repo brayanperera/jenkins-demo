@@ -5,7 +5,8 @@ pipeline {
         AWS_DEFAULT_REGION="ap-southeast-1"
         IMAGE_REPO_NAME="demo-app"
         IMAGE_TAG="latest"
-        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+        REPOSITORY_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+        INVENTORY_FILE="/home/ec2-user/inventory/demo_app_inventory.ini"
     }
 
     stages {
@@ -36,7 +37,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                script {
+                    sh "ansible-playbook -i ${INVENTORY_FILE} playbooks/app_deploy.yaml"
+                }
             }
         }
     }
