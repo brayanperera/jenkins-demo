@@ -1,0 +1,12 @@
+<!--users/templates/users/dashboard.html-->
+
+{% extends 'base.html' %}
+
+{% block content %}
+Hello, {{ user.username|default:'Guest' }}!
+
+<br/>
+
+Email: {{ user.email|default:'None' }}
+
+{% endblock %}

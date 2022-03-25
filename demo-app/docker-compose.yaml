@@ -1,0 +1,12 @@
+version: '3.3'
+
+services:
+  demo_app:
+    environment:
+      - ALLOWED_HOSTS=192.168.8.144
+    image: demo_app:1.0
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - /data/demo_app/db.sqlite3:/code/data/db.sqlite3
