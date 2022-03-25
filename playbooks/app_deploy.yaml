@@ -9,7 +9,7 @@
 
     - name: Upload docker-compose.yaml
       copy:
-        src: demo-app/docker-compose.yaml
+        src: ../demo-app/docker-compose.yaml
         dest: /home/ec2-user/apps/demo_app/docker-compose.yaml
         mode: '0644'
 
