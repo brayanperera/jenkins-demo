@@ -37,7 +37,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                ansiblePlaybook credentialsId: 'app_host', disableHostKeyChecking: true, installation: '/usr/bin/ansible', inventory: ${INVENTORY_FILE}, playbook: 'playbooks/app_deploy.yaml'
+                ansiblePlaybook credentialsId: 'app_host', disableHostKeyChecking: true, installation: '/usr/bin/ansible', inventory: "${INVENTORY_FILE}", playbook: 'playbooks/app_deploy.yaml'
             }
         }
     }
