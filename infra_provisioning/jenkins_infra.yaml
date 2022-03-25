@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  ## VPC Parameters
+  AzList:
+    Type: CommaDelimitedList
+    Default: "ap-southeast-1a, ap-southeast-1b"
+  VpcCidrBlock:
+    Type: String
+    Default: 10.100.0.0/20
+  PubCidrBlocks:
+    Type: CommaDelimitedList
+    Default: "10.100.1.0/24, 10.100.2.0/24"
+  PvtCidrBlocks:
+    Type: CommaDelimitedList
+    Default: "10.100.11.0/24, 10.100.12.0/24"
+
+  ## IAM Parameters
+  IamUser:
+    Type: String
+    Default: infra_cli_user
+
+
+Resources:
+
+Metadata:
+
+  Authors:
+    Description:  Brayan Perera (brayan.perera@gmail.com)
+
+  Purpose:
+    Description: "This template creates deployment environment for Jenkins server and application servers"
+
+  License: Apache-2.0
+
+Outputs:
