@@ -338,16 +338,16 @@ Resources:
       KeyName: !Ref 'BastionHostKeyName'
       ImageId: !Ref 'LatestAmiId'
       SubnetId: !Ref PublicSubnet1
-      Tags:
-        - Key: Name
-          Value: bastion
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
           yum update -y
           yum install git -y
           amazon-linux-extras install ansible2 -y
-
+      Tags:
+        - Key: Name
+          Value: bastion
+#
 
   JenkinsEC2Instance1:
     Type: AWS::EC2::Instance
@@ -364,9 +364,6 @@ Resources:
       ImageId: !Ref 'LatestAmiId'
       SubnetId: !Ref PrivateSubnet1
       IamInstanceProfile: !Ref JenkinsInstanceProfile
-      Tags:
-        - Key: Name
-          Value: jenkins-1
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
@@ -391,6 +388,11 @@ Resources:
           yum install jenkins -y
           systemctl enable jenkins
           systemctl start jenkins
+      Tags:
+        - Key: Name
+          Value: jenkins-1
+
+#
 
   AppEC2Instance1:
     Type: AWS::EC2::Instance
@@ -407,9 +409,6 @@ Resources:
       ImageId: !Ref 'LatestAmiId'
       SubnetId: !Ref PrivateSubnet1
       IamInstanceProfile: !Ref AppInstanceProfile
-      Tags:
-        - Key: Name
-          Value: app-1
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
@@ -427,6 +426,73 @@ Resources:
           usermod -a -G docker ec2-user
           curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
           chmod +x /usr/local/bin/docker-compose
+      Tags:
+        - Key: Name
+          Value: app-1
+#
+
+ ## ALB Resources
+  JenkinsTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      Name: jenkins-tg
+      Port: 8080
+      Protocol: HTTP
+      VpcId: !Ref JenkinsVPC
+      TargetType: instance
+      Targets:
+        - Id: !Ref JenkinsEC2Instance1
+#
+
+  AppTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      Name: App-tg
+      Port: 8000
+      Protocol: HTTP
+      VpcId: !Ref JenkinsVPC
+      TargetType: instance
+      Targets:
+        - Id: !Ref AppEC2Instance1
+#
+
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      IpAddressType: ipv4
+      Name: "DemoALB"
+      Scheme: internet-facing
+      SecurityGroups: [!Ref 'ALBSecGroup']
+      Subnets:
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+
+  ALBDefaultListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref JenkinsTargetGroup
+      LoadBalancerArn: !Ref ALB
+      Port: '80'
+      Protocol: HTTP
+
+  AppListenerRule:
+    Type: 'AWS::ElasticLoadBalancingV2::ListenerRule'
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref AppTargetGroup
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              - appdemo.brayanperera.cyou
+      ListenerArn: !Ref ALBDefaultListener
+      Priority: 1
+
 
 Metadata:
 
