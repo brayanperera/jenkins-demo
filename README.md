@@ -15,3 +15,9 @@ This project deploy Jenkins server on AWS
 ### Pipeline Job Creation
 
 ### Application Deployment to App server instance
+
+## Application Usage
+
+### Dev Environment (Local)
+
+### Prod Environment 
