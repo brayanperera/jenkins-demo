@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: app_server
   tasks:
     - name: Create project Home
       file:
