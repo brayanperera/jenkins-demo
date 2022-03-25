@@ -6,15 +6,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                script {
-                    echo 'Building demo-app'
-                }
-
-                script {
-                    cd demo_app
-                }
-
-                script {
+                echo 'Building demo-app'
+                dir("demo-app") {
                     docker build -t "demo-app:latest" .
                     docker tag "demo-app:latest 363052508649.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app:latest"
                     docker push "363052508649.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app:latest"
