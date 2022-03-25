@@ -392,6 +392,42 @@ Resources:
           systemctl enable jenkins
           systemctl start jenkins
 
+  AppEC2Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'AppInstanceType'
+      SecurityGroupIds:
+        - !GetAtt
+          - AppHostSecGroup
+          - GroupId
+        - !GetAtt
+          - OriginSecurityGroup
+          - GroupId
+      KeyName: !Ref 'AppHostKeyName'
+      ImageId: !Ref 'LatestAmiId'
+      SubnetId: !Ref PrivateSubnet1
+      IamInstanceProfile: !Ref AppInstanceProfile
+      Tags:
+        - Key: Name
+          Value: app-1
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          export LC_CTYPE=en_US.UTF-8
+          export LC_ALL=en_US.UTF-8
+
+          # Update the OS packages
+          yum upgrade
+
+          # Install Docker and docker-compose
+
+          yum install -y curl
+          amazon-linux-extras install docker
+          service docker start
+          usermod -a -G docker ec2-user
+          curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+
 Metadata:
 
   Authors:
