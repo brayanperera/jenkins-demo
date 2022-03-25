@@ -67,6 +67,123 @@ Parameters:
 
 Resources:
 
+  ## VPC
+  JenkinsVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidrBlock
+
+  ## Subnets
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref JenkinsVPC
+      AvailabilityZone: !Select [ 0, !Ref AzList ]
+      CidrBlock: !Select [ 0, !Ref PubCidrBlocks ]
+      MapPublicIpOnLaunch: true
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref JenkinsVPC
+      AvailabilityZone: !Select [ 1, !Ref AzList ]
+      CidrBlock: !Select [ 1, !Ref PubCidrBlocks ]
+      MapPublicIpOnLaunch: true
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref JenkinsVPC
+      AvailabilityZone: !Select [ 0, !Ref AzList ]
+      CidrBlock: !Select [ 0, !Ref PvtCidrBlocks ]
+      MapPublicIpOnLaunch: false
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref JenkinsVPC
+      AvailabilityZone: !Select [ 1, !Ref AzList ]
+      CidrBlock: !Select [ 1, !Ref PvtCidrBlocks ]
+      MapPublicIpOnLaunch: false
+
+
+ ## Internet Gateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  GatewayToInternet:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref JenkinsVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  ## Public Routing
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref JenkinsVPC
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: GatewayToInternet
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
+
+  ## NAT Gateway
+  NatGateway:
+    Type: AWS::EC2::NatGateway
+    DependsOn: NatPublicIP
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      AllocationId: !GetAtt NatPublicIP.AllocationId
+
+  ## ELASTIC IP
+  NatPublicIP:
+    Type: AWS::EC2::EIP
+    DependsOn: JenkinsVPC
+    Properties:
+      Domain: vpc
+
+  ## Private Routing
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref JenkinsVPC
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      NatGatewayId: !Ref NatGateway
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
+
 Metadata:
 
   Authors:
