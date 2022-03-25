@@ -326,7 +326,71 @@ Resources:
         ToPort: 8000
         SourceSecurityGroupId: !Ref ALBSecGroup
 
+  ## EC2 Resources
+  BastionEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'BastionInstanceType'
+      SecurityGroupIds:
+        - !GetAtt
+          - BastionHostSecGroup
+          - GroupId
+      KeyName: !Ref 'BastionHostKeyName'
+      ImageId: !Ref 'LatestAmiId'
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: bastion
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install git -y
+          amazon-linux-extras install ansible2 -y
 
+
+  JenkinsEC2Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'JenkinsInstanceType'
+      SecurityGroupIds:
+        - !GetAtt
+          - JenkinsHostSecGroup
+          - GroupId
+        - !GetAtt
+          - OriginSecurityGroup
+          - GroupId
+      KeyName: !Ref 'JenkinsHostKeyName'
+      ImageId: !Ref 'LatestAmiId'
+      SubnetId: !Ref PrivateSubnet1
+      IamInstanceProfile: !Ref JenkinsInstanceProfile
+      Tags:
+        - Key: Name
+          Value: jenkins-1
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          export LC_CTYPE=en_US.UTF-8
+          export LC_ALL=en_US.UTF-8
+
+          # Update the OS packages
+          yum upgrade
+
+          # Install Docker and docker-compose
+          amazon-linux-extras install docker
+          service docker start
+          usermod -a -G docker ec2-user
+          curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+
+          # Install Jenkins
+          wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+          rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+          amazon-linux-extras install java-openjdk11 -y
+          yum install jenkins -y
+          systemctl enable jenkins
+          systemctl start jenkins
 
 Metadata:
 
