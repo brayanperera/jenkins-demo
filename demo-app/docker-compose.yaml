@@ -3,7 +3,7 @@ version: '3.3'
 services:
   demo_app:
     environment:
-      - ALLOWED_HOSTS=demoapp.brayanperera.cyou
+      - ALLOWED_HOSTS=appdemo.brayanperera.cyou
     image: 363052508649.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app:latest
     restart: always
     ports:
