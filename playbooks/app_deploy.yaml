@@ -14,7 +14,7 @@
         mode: '0644'
 
     - name: Invoke docker-compose up
-      command: docker-compose up
+      command: docker-compose up -d
       args:
         chdir: /home/ec2-user/apps/demo_app/
 
