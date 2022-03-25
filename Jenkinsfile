@@ -1,9 +1,6 @@
 pipeline {
     agent any
     environment {
-        registry = "demo-app:latest 363052508649.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app"
-    }
-    environment {
         AWS_ACCOUNT_ID="363052508649"
         AWS_DEFAULT_REGION="ap-southeast-1"
         IMAGE_REPO_NAME="demo-app"
@@ -12,12 +9,14 @@ pipeline {
     }
 
     stages {
-        stage('ECR_Login')
-            steps {
+        stage('ECR_Login'){
+             steps {
                 script {
                     sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                 }
             }
+        }
+
         stage('Build') {
             steps {
                 dir("demo-app") {
