@@ -6,9 +6,30 @@ This project deploy Jenkins server on AWS
 
 ## Architecture
 
+[Detailed Presentation](docs/Jenkins-Demo-BrayanPerera.pptx)
+
 ## Infrastructure Preparation
 
+Infrastructure preparation has two stages
+
+- AWS Infrastructure setup via Cloudformation
+- Post Instance creation steps
+  - Jenkins Initial configurations
+  - App host deployment env setup
+
+
 ### AWS Infrastructure setup via Cloudformation
+
+#### Pre-Requisites 
+
+Following items should be available
+
+- IAM User
+- EC2 Keypair
+
+For CLI based cloudformation stack creation. 
+- VM/PC with aws cli installed
+
 
 ### Application Deployment to App server instance
 
@@ -57,12 +78,11 @@ Playbook steps:
       - */main
   - Script Path
     - Jenkinsfile
+    
 
+## Application startup 
 
-
-
-## Application Usage
-
-### Dev Environment (Local)
-
-### Prod Environment 
+````bash
+cd /home/ec2-user/apps/demo_app
+docker-compose up -d
+````
