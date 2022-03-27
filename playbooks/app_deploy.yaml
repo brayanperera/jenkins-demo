@@ -15,7 +15,7 @@
 
     - name: ECR login
       shell: |
-      aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 573847103844.dkr.ecr.ap-south-1.amazonaws.com/demo-app
+        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 573847103844.dkr.ecr.ap-south-1.amazonaws.com/demo-app
 
     - name: Invoke docker-compose up
       command: docker-compose up -d
