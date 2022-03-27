@@ -83,6 +83,8 @@ Playbook steps:
   - Create two DNS Records -- CNAME
     - jenkins.yourdomain CNAME <Stack output : AlbDNS>
     - appdemo.yourdomain CNAME <Stack output : AlbDNS>
+- Update `jenkins-demo/playbooks/app_deploy.yaml` to set the region and account-id
+- Update `jenkins-demo/demo-app/docker-compose.yaml` to set the region and account-id
 
 
 ### Jenkins Init Configs
@@ -126,9 +128,16 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
       - */main
   - Script Path
     - Jenkinsfile
+- Run initial pipeline manually
+
+
+### Invoke the Pipeline
+
+- Update the codebase, commit and push to main branch. 
+- This will invoke webhook from GitHub to the Jenkins server and pipeline will be invoked.
     
 
-## Application startup 
+## Application startup -- Manual
 
 ````bash
 cd /home/ec2-user/apps/demo_app
