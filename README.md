@@ -74,8 +74,9 @@ Playbook steps:
 
 #### Initial Manual Steps
 
-- Upload sqlite db file
+- Upload sqlite db file to App Host
   - Path: `/data/demo_app/`
+- Create ansible inventory file in Jenkins server
 - Create credentials for app-host ssh key to Jenkins server
 - Setup DNS CNAME settings 
   - Login to your DNS hosting service console
