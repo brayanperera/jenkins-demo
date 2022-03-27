@@ -6,7 +6,7 @@ This project deploy Jenkins server on AWS
 
 ## Architecture
 
-[Detailed Presentation](docs/Jenkins-Demo-BrayanPerera.pptx)
+[Detailed Presentation](docs/Jenkins-Demo-BrayanPerera.pdf)
 
 ## Infrastructure Preparation
 
