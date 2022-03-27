@@ -25,7 +25,12 @@ Infrastructure preparation has two stages
 Following items should be available in the AWS account / region
 
 - IAM User
-  - 
+  - Administrator access OR
+  - Permission for
+    - IAM Roles creation
+    - EC2 Instance creation
+    - ELB and Target group creation
+    - VPC and subnet creation 
 - EC2 Keypair
 
 For CLI based cloudformation stack creation. 
@@ -70,11 +75,27 @@ Playbook steps:
 #### Initial Manual Steps
 
 - Upload sqlite db file
-  - Path: ``
-- Upload access ssh key to Jenkins server
+  - Path: `/data/demo_app/`
+- Create credentials for app-host ssh key to Jenkins server
+- Setup DNS CNAME settings 
+  - Login to your DNS hosting service console
+  - Create two DNS Records -- CNAME
+    - jenkins.yourdomain CNAME <Stack output : AlbDNS>
+    - appdemo.yourdomain CNAME <Stack output : AlbDNS>
 
 
 ### Jenkins Init Configs
+
+#### Initial Admin password setup
+
+- Access jenkins.yourdomain
+- Login to `jenkins-1` instance and get password and submit. 
+
+````bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+````
+
+- Create user and password 
 
 #### Required Plugins
 
@@ -86,6 +107,7 @@ Playbook steps:
 ### Pipeline Job Creation
 
 - In GitHub create a webhook towards Jenkins
+  - `http://jenkins.yourdomain/github-webhook/`
 - In Jenkins
   - New Items 
     - Name: "Demo-App-Pipeline"
