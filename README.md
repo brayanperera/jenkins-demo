@@ -22,13 +22,38 @@ Infrastructure preparation has two stages
 
 #### Pre-Requisites 
 
-Following items should be available
+Following items should be available in the AWS account / region
 
 - IAM User
+  - 
 - EC2 Keypair
 
 For CLI based cloudformation stack creation. 
 - VM/PC with aws cli installed
+
+#### Stack creation via CLI
+
+1. Source your AWS credential in the client PC/VM
+
+**Note:** Fill the values accordingly 
+
+```bash
+export AWS_ACC_NUMBER=""
+export AWS_USERNAME=""
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_DEFAULT_REGION=""
+```
+
+2. Execute create stack
+
+```bash
+
+cd <path_of_the_jenkins-demo>
+aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name demo-stack \
+--template-body file://infra_provisioning//jenkins_infra.yaml
+```
+
 
 
 ### Application Deployment to App server instance

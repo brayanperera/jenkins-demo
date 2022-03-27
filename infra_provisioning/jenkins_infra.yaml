@@ -3,7 +3,7 @@ Parameters:
   ## VPC Parameters
   AzList:
     Type: CommaDelimitedList
-    Default: "ap-southeast-1a, ap-southeast-1b"
+    Default: "ap-south-1a, ap-south-1b"
   VpcCidrBlock:
     Type: String
     Default: 10.100.0.0/20
