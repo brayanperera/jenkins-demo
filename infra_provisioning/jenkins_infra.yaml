@@ -23,32 +23,32 @@ Parameters:
   BastionHostKeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the Bastion Host instance
     Type: AWS::EC2::KeyPair::KeyName
-    Default: "infra_provision"
+    Default: "bastion_key"
 
   JenkinsHostKeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the Jenkins Host instance
     Type: AWS::EC2::KeyPair::KeyName
-    Default: "infra_provision"
+    Default: "jenkins_host"
 
   AppHostKeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the Application Host instance
     Type: AWS::EC2::KeyPair::KeyName
-    Default: "infra_provision"
+    Default: "app_host"
 
   BastionInstanceType:
     Description: Bastion Host EC2 instance type
     Type: String
-    Default: t3.small
+    Default: t2.micro
 
   JenkinsInstanceType:
     Description: Jenkins Host EC2 instance type
     Type: String
-    Default: t3.small
+    Default: t2.micro
 
   AppInstanceType:
     Description: App Host EC2 instance type
     Type: String
-    Default: t3.small
+    Default: t2.micro
 
   LatestAmiId:
     Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
@@ -383,6 +383,9 @@ Resources:
           usermod -a -G docker ec2-user
           curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
           chmod +x /usr/local/bin/docker-compose
+
+          # Install Git
+          yum install git -y
 
           # Install Jenkins
           wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
