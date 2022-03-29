@@ -22,6 +22,11 @@
       args:
         chdir: /home/ec2-user/apps/demo_app/
 
+    - name: Invoke docker-compose pull
+      command: docker-compose pull
+      args:
+        chdir: /home/ec2-user/apps/demo_app/
+
     - name: Invoke docker-compose up
       command: docker-compose up -d
       args:
