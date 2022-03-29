@@ -17,6 +17,11 @@
       shell: |
         aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 573847103844.dkr.ecr.ap-south-1.amazonaws.com/demo-app
 
+    - name: Invoke docker-compose down
+      command: docker-compose down
+      args:
+        chdir: /home/ec2-user/apps/demo_app/
+
     - name: Invoke docker-compose up
       command: docker-compose up -d
       args:
