@@ -4,7 +4,7 @@ RUN mkdir /code
 WORKDIR /code
 ADD requirements.txt .
 RUN pip install -r requirements.txt
-COPY . .
+COPY . /code/
 RUN python manage.py collectstatic --no-input
 EXPOSE 8000
 
